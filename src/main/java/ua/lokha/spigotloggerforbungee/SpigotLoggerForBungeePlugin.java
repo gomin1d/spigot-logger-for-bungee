@@ -1,5 +1,7 @@
 package ua.lokha.spigotloggerforbungee;
 
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.log.LogDispatcher;
 import ua.lokha.spigotloggerforbungee.injectclasses.InjectConsoleReader;
 import net.md_5.bungee.BungeeCord;
@@ -13,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
@@ -30,6 +34,7 @@ import ua.lokha.spigotloggerforbungee.utils.Try;
 public class SpigotLoggerForBungeePlugin extends Plugin {
 
     private org.apache.logging.log4j.Logger logger;
+    private ExecutorService commandExecutor = Executors.newSingleThreadExecutor();
 
     @Override
     public void onLoad() {
@@ -105,6 +110,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
     }
 
     private void startConsoleThread(BungeeCord bungeeCord) {
+
         Thread thread = new Thread(() -> {
             if (!TerminalHandler.handleCommands(bungeeCord, this)) {
                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
@@ -114,9 +120,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
                     while(this.isRunning()) {
                         String line = bufferedreader.readLine();
                         if (line != null && line.trim().length() > 0) {
-                            if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
-                                bungeeCord.getConsole().sendMessage((new ComponentBuilder("Command not found")).color(ChatColor.RED).create());
-                            }
+                            this.dispatchCommand(line);
                         }
                     }
                 } catch (IOException var4) {
@@ -127,5 +131,14 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
         thread.setDaemon(true);
         thread.start();
+    }
+
+    public void dispatchCommand(String line) {
+        commandExecutor.submit(()->{
+            final BungeeCord bungeeCord = BungeeCord.getInstance();
+            if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
+                bungeeCord.getConsole().sendMessage((new ComponentBuilder("Command not found")).color(ChatColor.RED).create());
+            }
+        });
     }
 }

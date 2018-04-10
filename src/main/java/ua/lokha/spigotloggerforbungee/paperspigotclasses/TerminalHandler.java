@@ -14,6 +14,7 @@ import ua.lokha.spigotloggerforbungee.SpigotLoggerForBungeePlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * this class from paperspigot: com.destroystokyo.paper.console.TerminalHandler
@@ -48,10 +49,7 @@ public class TerminalHandler {
 
                     line = line.trim();
                     if (!line.isEmpty()) {
-                        // this code from net.md_5.bungee.BungeeCordLauncher::main
-                        if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
-                            bungeeCord.getConsole().sendMessage((new ComponentBuilder("Command not found")).color(ChatColor.RED).create());
-                        }
+                        plugin.dispatchCommand(line);
                     }
                 }
             } catch (UserInterruptException var10) {
