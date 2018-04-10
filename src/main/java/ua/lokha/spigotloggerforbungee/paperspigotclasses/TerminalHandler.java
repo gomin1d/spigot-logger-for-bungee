@@ -32,6 +32,7 @@ public class TerminalHandler {
                         final String buffer = line.line();
                         List<String> suggestions = new ArrayList<>();
                         bungeeCord.getPluginManager().dispatchCommand(bungeeCord.getConsole(), buffer, suggestions);
+                        System.out.println("COMPLETE " + suggestions);
                         for (String suggestion : suggestions) {
                             candidates.add(new Candidate(suggestion));
                         }

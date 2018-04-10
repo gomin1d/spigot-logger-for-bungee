@@ -1,6 +1,5 @@
 package ua.lokha.spigotloggerforbungee;
 
-import net.md_5.bungee.log.ConciseFormatter;
 import net.md_5.bungee.log.LogDispatcher;
 import ua.lokha.spigotloggerforbungee.injectclasses.InjectConsoleReader;
 import net.md_5.bungee.BungeeCord;
@@ -32,8 +31,6 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
     private org.apache.logging.log4j.Logger logger;
 
-    private boolean isRunning = true;
-
     @Override
     public void onLoad() {
         BungeeCord bungeeCord = BungeeCord.getInstance();
@@ -54,18 +51,23 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         // fix all loggers
         this.fixLoggers(bungeeCord);
 
-        // console thread
-        this.startConsoleTread(bungeeCord);
-
-        //disable default console
-        this.disableDefaultConsole(bungeeCord);
-
         bungeeCord.getLogger().info("Hello, new logger!");
     }
 
     @Override
+    public void onEnable() {
+        BungeeCord bungeeCord = BungeeCord.getInstance();
+
+        // console thread
+        this.startConsoleThread(bungeeCord);
+
+        //disable default console
+        this.disableDefaultConsole(bungeeCord);
+    }
+
+    @Override
     public void onDisable() {
-        this.isRunning = false;
+
     }
 
     private void fixLoggers(BungeeCord bungeeCord) {
@@ -85,7 +87,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
     }
 
     public boolean isRunning() {
-        return isRunning;
+        return BungeeCord.getInstance().isRunning;
     }
 
     private void disableDefaultConsole(BungeeCord bungeeCord) {
@@ -102,14 +104,14 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         logger.addHandler(handler);
     }
 
-    private void startConsoleTread(BungeeCord bungeeCord) {
+    private void startConsoleThread(BungeeCord bungeeCord) {
         Thread thread = new Thread(() -> {
             if (!TerminalHandler.handleCommands(bungeeCord, this)) {
                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
                 try {
                     // this code from net.md_5.bungee.BungeeCordLauncher::main
-                    while(this.isRunning) {
+                    while(this.isRunning()) {
                         String line = bufferedreader.readLine();
                         if (line != null && line.trim().length() > 0) {
                             if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
