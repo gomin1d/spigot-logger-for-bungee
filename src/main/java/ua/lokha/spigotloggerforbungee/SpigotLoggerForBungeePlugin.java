@@ -1,5 +1,6 @@
 package ua.lokha.spigotloggerforbungee;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.log.LogDispatcher;
@@ -34,7 +35,7 @@ import ua.lokha.spigotloggerforbungee.utils.Try;
 public class SpigotLoggerForBungeePlugin extends Plugin {
 
     private org.apache.logging.log4j.Logger logger;
-    private ExecutorService commandExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService commandExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Console Thread #%d").build());
 
     @Override
     public void onLoad() {

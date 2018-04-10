@@ -6,7 +6,7 @@
 
     <groupId>ua.lokha</groupId>
     <artifactId>spigot-logger-for-bungee</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <plugin.namePlugin>SpigotLoggerForBungee</plugin.namePlugin>
@@ -33,7 +33,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <app.out>D:\IdeaProjects\justvillage\TestBungee\plugins\</app.out>
+                <app.out>C:\Users\lokha\Desktop\BungeeCord\plugins\</app.out>
             </properties>
         </profile>
     </profiles>
