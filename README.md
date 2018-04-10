@@ -1,3 +1,5 @@
+Spigot Resources: https://www.spigotmc.org/resources/spigotloggerforbungee.55531/
+
 This is a BungeeCord plugin that allows you to do logging in BungeeCord, as in Spigot.
 Logs will be collected in the `logs` folder:
 ```
