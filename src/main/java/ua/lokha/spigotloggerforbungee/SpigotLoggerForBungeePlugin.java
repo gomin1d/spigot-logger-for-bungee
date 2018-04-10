@@ -51,12 +51,12 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         System.setOut(IoBuilder.forLogger(logger).setLevel(Level.INFO).buildPrintStream());
         System.setErr(IoBuilder.forLogger(logger).setLevel(Level.WARN).buildPrintStream());
 
-        bungeeCord.getLogger().info("Goodbye, old logger (All subsequent logs will be posted in logs/latest.log)."); // :D
+        this.getLogger().info("Goodbye, old logger (All subsequent logs will be posted in logs/latest.log)."); // :D
 
         // fix all loggers
         this.fixLoggers(bungeeCord);
 
-        bungeeCord.getLogger().info("Hello, new logger!");
+        this.getLogger().info("Hello, new logger!");
     }
 
     @Override
