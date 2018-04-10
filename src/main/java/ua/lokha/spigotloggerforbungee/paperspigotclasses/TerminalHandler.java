@@ -9,6 +9,7 @@ import net.minecrell.terminalconsole.TerminalConsoleAppender;
 import org.jline.reader.*;
 import org.jline.reader.LineReader.Option;
 import org.jline.terminal.Terminal;
+import ua.lokha.spigotloggerforbungee.CommandCompleter;
 import ua.lokha.spigotloggerforbungee.SpigotLoggerForBungeePlugin;
 
 import java.util.ArrayList;
@@ -23,22 +24,11 @@ public class TerminalHandler {
 
     public static boolean handleCommands(BungeeCord bungeeCord, SpigotLoggerForBungeePlugin plugin) {
         Terminal terminal = TerminalConsoleAppender.getTerminal();
-        System.out.println("TERTIMAL: " + terminal);
         if (terminal == null) {
             return false;
         } else {
             LineReader reader = LineReaderBuilder.builder().appName("BungeeCord").terminal(terminal)
-                    .completer((reader1, line, candidates) -> {
-                        final String buffer = line.line();
-                        List<String> suggestions = new ArrayList<>();
-                        bungeeCord.getPluginManager().dispatchCommand(bungeeCord.getConsole(), buffer, suggestions);
-                        System.out.println("COMPLETE " + suggestions);
-                        for (String suggestion : suggestions) {
-                            candidates.add(new Candidate(suggestion));
-                        }
-//                            int lastSpace = buffer.lastIndexOf(32);
-//                            return lastSpace == -1 ? cursor - buffer.length() : cursor - (buffer.length() - lastSpace - 1);
-                    })
+                    .completer(new CommandCompleter(bungeeCord))
                     .build();
             reader.unsetOpt(Option.INSERT_TAB);
             TerminalConsoleAppender.setReader(reader);
