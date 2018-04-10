@@ -35,8 +35,8 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
     private boolean isRunning = true;
 
     @Override
-    public void onEnable() {
-       BungeeCord bungeeCord = BungeeCord.getInstance();
+    public void onLoad() {
+        BungeeCord bungeeCord = BungeeCord.getInstance();
         // undo ansi library
         System.setOut(AnsiConsole.system_out);
         System.setErr(AnsiConsole.system_err);
