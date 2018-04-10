@@ -23,6 +23,7 @@ public class TerminalHandler {
 
     public static boolean handleCommands(BungeeCord bungeeCord, SpigotLoggerForBungeePlugin plugin) {
         Terminal terminal = TerminalConsoleAppender.getTerminal();
+        System.out.println("TERTIMAL: " + terminal);
         if (terminal == null) {
             return false;
         } else {
