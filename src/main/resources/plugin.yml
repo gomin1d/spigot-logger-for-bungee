@@ -1,0 +1,4 @@
+name: ${plugin.namePlugin}
+version: ${project.version}
+author: ${plugin.authors}
+main: ${plugin.mainClass}
