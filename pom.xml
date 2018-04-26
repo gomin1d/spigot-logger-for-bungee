@@ -33,7 +33,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <app.out>C:\Users\lokha\Desktop\BungeeCord\plugins\</app.out>
+                <app.out>D:\IdeaProjects\spigot-logger-for-bungee\BungeeCord\plugins\</app.out>
             </properties>
         </profile>
     </profiles>
