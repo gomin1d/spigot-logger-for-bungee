@@ -18,8 +18,8 @@
     <repositories>
         <!-- Наше -->
         <repository>
-            <id>ml-nexus-read</id>
-            <url>http://nexus.mineland.net/content/repositories/public</url>
+            <id>yo-nexus-read</id>
+            <url>http://dev.mineland.net:8081/repository/yo-nexus-read/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -33,7 +33,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <app.out>D:\IdeaProjects\spigot-logger-for-bungee\BungeeCord\plugins\</app.out>
+                <app.out>D:\IdeaProjects\yottacraft\TestBungee\plugins\</app.out>
             </properties>
         </profile>
     </profiles>
@@ -92,9 +92,9 @@
 
 
         <dependency>
-            <groupId>net.justvillage</groupId>
-            <artifactId>bungee</artifactId>
-            <version>build1308</version>
+            <groupId>ru.yottacraft</groupId>
+            <artifactId>BungeeCord</artifactId>
+            <version>ready_1.13.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

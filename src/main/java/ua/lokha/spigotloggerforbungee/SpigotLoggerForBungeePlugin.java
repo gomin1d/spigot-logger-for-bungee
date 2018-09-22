@@ -1,14 +1,6 @@
 package ua.lokha.spigotloggerforbungee;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerHandshakeEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.log.LogDispatcher;
 import ua.lokha.spigotloggerforbungee.injectclasses.InjectConsoleReader;
 import net.md_5.bungee.BungeeCord;
@@ -22,10 +14,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,8 +31,6 @@ import ua.lokha.spigotloggerforbungee.paperspigotclasses.TerminalHandler;
 import ua.lokha.spigotloggerforbungee.utils.MyObject;
 import ua.lokha.spigotloggerforbungee.utils.Try;
 
-import javax.net.ssl.HandshakeCompletedEvent;
-
 /**
  * many fragments of this class are taken from net.minecraft.server.v1_12_R1.DedicatedServer::init
  */
@@ -44,6 +38,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
     private org.apache.logging.log4j.Logger logger;
     private ExecutorService commandExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Console Thread #%d").build());
+    private Logger fixLogger;
 
     @Override
     public void onLoad() {
@@ -63,7 +58,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         this.getLogger().info("Goodbye, old logger (All subsequent logs will be posted in logs/latest.log)."); // :D
 
         // fix all loggers
-        this.fixLoggers(bungeeCord);
+        fixLogger = this.fixLoggers(bungeeCord);
 
         this.getLogger().info("Hello, new logger!");
     }
@@ -77,6 +72,11 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
         //disable default console
         this.disableDefaultConsole(bungeeCord);
+
+        bungeeCord.getPluginManager().getPlugins().stream()
+                .flatMap(plugin -> Stream.of(plugin.getLogger().getHandlers())
+                        .filter(handler -> handler instanceof ForwardLogHandler))
+                .forEach(handler -> MyObject.wrap(handler).getField("cachedLoggers").getObject(Map.class).clear());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
     }
 
-    private void fixLoggers(BungeeCord bungeeCord) {
+    private Logger fixLoggers(BungeeCord bungeeCord) {
         java.util.logging.Logger global = java.util.logging.Logger.getLogger("");
         this.fixLogger(global);
 
@@ -98,6 +98,8 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         MyObject.wrap(bungeeCord).setField("logger", newLogger);
 
         bungeeCord.getPluginManager().getPlugins().forEach(plugin -> plugin.getLogger().setParent(newLogger));
+
+        return newLogger;
     }
 
     public boolean isRunning() {
