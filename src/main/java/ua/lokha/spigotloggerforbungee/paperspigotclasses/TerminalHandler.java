@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.command.ConsoleCommandSender;
 import net.minecrell.terminalconsole.TerminalConsoleAppender;
+import org.apache.logging.log4j.Logger;
 import org.jline.reader.*;
 import org.jline.reader.LineReader.Option;
 import org.jline.terminal.Terminal;
@@ -23,7 +24,7 @@ public class TerminalHandler {
     private TerminalHandler() {
     }
 
-    public static boolean handleCommands(BungeeCord bungeeCord, SpigotLoggerForBungeePlugin plugin) {
+    public static boolean handleCommands(BungeeCord bungeeCord, SpigotLoggerForBungeePlugin plugin, Logger logger) {
         Terminal terminal = TerminalConsoleAppender.getTerminal();
         if (terminal == null) {
             return false;
@@ -36,20 +37,24 @@ public class TerminalHandler {
 
             try {
                 while (plugin.isRunning()) {
-                    String line;
                     try {
-                        line = reader.readLine("> ");
-                    } catch (EndOfFileException var9) {
-                        continue;
-                    }
+                        String line;
+                        try {
+                            line = reader.readLine("> ");
+                        } catch (EndOfFileException var9) {
+                            continue;
+                        }
 
-                    if (line == null) {
-                        break;
-                    }
+                        if (line == null) {
+                            break;
+                        }
 
-                    line = line.trim();
-                    if (!line.isEmpty()) {
-                        plugin.dispatchCommand(line);
+                        line = line.trim();
+                        if (!line.isEmpty()) {
+                            plugin.dispatchCommand(line);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Exception handling console input", e);
                     }
                 }
             } catch (UserInterruptException var10) {

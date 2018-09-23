@@ -123,18 +123,22 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
     private void startConsoleThread(BungeeCord bungeeCord) {
 
         Thread thread = new Thread(() -> {
-            if (!TerminalHandler.handleCommands(bungeeCord, this)) {
+            if (!TerminalHandler.handleCommands(bungeeCord, this, logger)) {
                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
                 try {
                     // this code from net.md_5.bungee.BungeeCordLauncher::main
                     while(this.isRunning()) {
-                        String line = bufferedreader.readLine();
-                        if (line != null && line.trim().length() > 0) {
-                            this.dispatchCommand(line);
+                        try {
+                            String line = bufferedreader.readLine();
+                            if (line != null && line.trim().length() > 0) {
+                                this.dispatchCommand(line);
+                            }
+                        } catch (Exception e) {
+                            logger.error("Exception handling console input", e);
                         }
                     }
-                } catch (IOException var4) {
+                } catch (Exception var4) {
                     logger.error("Exception handling console input", var4);
                 }
             }
