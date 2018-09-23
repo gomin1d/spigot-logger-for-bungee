@@ -9,10 +9,13 @@ import net.minecrell.terminalconsole.TerminalConsoleAppender;
 import org.apache.logging.log4j.Logger;
 import org.jline.reader.*;
 import org.jline.reader.LineReader.Option;
+import org.jline.reader.impl.LineReaderImpl;
 import org.jline.terminal.Terminal;
 import ua.lokha.spigotloggerforbungee.CommandCompleter;
 import ua.lokha.spigotloggerforbungee.SpigotLoggerForBungeePlugin;
+import ua.lokha.spigotloggerforbungee.utils.Try;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -21,6 +24,12 @@ import java.util.concurrent.ExecutorService;
  * this class from paperspigot: com.destroystokyo.paper.console.TerminalHandler
  */
 public class TerminalHandler {
+    private static Field LineReaderImpl_reading = Try.unchecked(() -> {
+        final Field reading = LineReaderImpl.class.getDeclaredField("reading");
+        reading.setAccessible(true);
+        return reading;
+    });
+
     private TerminalHandler() {
     }
 
@@ -40,7 +49,13 @@ public class TerminalHandler {
                     try {
                         String line;
                         try {
+                            if (reader instanceof LineReaderImpl) {
+                                LineReaderImpl_reading.set(reader, false);
+                            }
                             line = reader.readLine("> ");
+                            if (reader instanceof LineReaderImpl) {
+                                LineReaderImpl_reading.set(reader, true);
+                            }
                         } catch (EndOfFileException var9) {
                             continue;
                         }
