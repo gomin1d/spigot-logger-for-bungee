@@ -150,9 +150,13 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
 
     public void dispatchCommand(String line) {
         commandExecutor.submit(()->{
-            final BungeeCord bungeeCord = BungeeCord.getInstance();
-            if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
-                bungeeCord.getConsole().sendMessage((new ComponentBuilder("Command not found")).color(ChatColor.RED).create());
+            try {
+                final BungeeCord bungeeCord = BungeeCord.getInstance();
+                if (!bungeeCord.getPluginManager().dispatchCommand(ConsoleCommandSender.getInstance(), line)) {
+                    bungeeCord.getConsole().sendMessage((new ComponentBuilder("Command not found")).color(ChatColor.RED).create());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

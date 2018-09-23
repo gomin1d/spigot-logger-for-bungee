@@ -30,20 +30,24 @@ public class ForwardLogHandler
     @Override
     public void publish(LogRecord record)
     {
-        Logger logger = getLogger(String.valueOf(record.getLoggerName()));
-        Throwable exception = record.getThrown();
-        Level level = record.getLevel();
-        String message = getFormatter().formatMessage(record);
-        if (level == Level.SEVERE) {
-            logger.error(message, exception);
-        } else if (level == Level.WARNING) {
-            logger.warn(message, exception);
-        } else if (level == Level.INFO) {
-            logger.info(message, exception);
-        } else if (level == Level.CONFIG) {
-            logger.debug(message, exception);
-        } else {
-            logger.trace(message, exception);
+        try {
+            Logger logger = getLogger(String.valueOf(record.getLoggerName()));
+            Throwable exception = record.getThrown();
+            Level level = record.getLevel();
+            String message = getFormatter().formatMessage(record);
+            if (level == Level.SEVERE) {
+                logger.error(message, exception);
+            } else if (level == Level.WARNING) {
+                logger.warn(message, exception);
+            } else if (level == Level.INFO) {
+                logger.info(message, exception);
+            } else if (level == Level.CONFIG) {
+                logger.debug(message, exception);
+            } else {
+                logger.trace(message, exception);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
