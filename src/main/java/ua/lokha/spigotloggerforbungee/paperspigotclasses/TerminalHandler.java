@@ -68,6 +68,8 @@ public class TerminalHandler {
                         if (!line.isEmpty()) {
                             plugin.dispatchCommand(line);
                         }
+                    } catch (UserInterruptException e) { // юзер хочет выключить программу
+                        throw e;
                     } catch (Exception e) {
                         logger.error("Exception handling console input", e);
                     }
