@@ -16,16 +16,13 @@
     </properties>
 
     <repositories>
-        <!-- Наше -->
         <repository>
-            <id>yo-nexus-read</id>
-            <url>http://dev.mineland.net:8081/repository/yo-nexus-read/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>lokha-maven-repo</id>
+            <url>https://raw.githubusercontent.com/lokha/maven-repo/repository/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -33,7 +30,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <app.out>D:\IdeaProjects\yottacraft\TestBungee\plugins\</app.out>
+                <app.out>BungeeCord\plugins</app.out>
             </properties>
         </profile>
     </profiles>
@@ -90,11 +87,11 @@
             <version>3.0.2</version>
         </dependency>
 
-
+        <!-- Ядро, банга -->
         <dependency>
-            <groupId>ru.yottacraft</groupId>
-            <artifactId>BungeeCord</artifactId>
-            <version>ready_1.13.1</version>
+            <groupId>net.mineland</groupId>
+            <artifactId>BungeeBotFilter</artifactId>
+            <version>1.16.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
