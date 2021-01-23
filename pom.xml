@@ -159,6 +159,11 @@
                 <configuration>
                     <outputDirectory>${app.out}</outputDirectory>
                     <finalName>${plugin.namePlugin}</finalName>
+                    <archive>
+                        <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
