@@ -48,7 +48,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         System.setErr(AnsiConsole.system_err);
 
         //init logger from log4j2.xml from resources this plugin
-        this.logger = LogManager.getLogger();
+        this.logger = LogManager.getLogger(SpigotLoggerForBungeePlugin.class);
 
         //set default I/O
         org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
