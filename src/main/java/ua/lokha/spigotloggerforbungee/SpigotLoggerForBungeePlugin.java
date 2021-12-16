@@ -1,35 +1,31 @@
 package ua.lokha.spigotloggerforbungee;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.md_5.bungee.log.LogDispatcher;
-import ua.lokha.spigotloggerforbungee.injectclasses.InjectConsoleReader;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.command.ConsoleCommandSender;
+import net.md_5.bungee.log.LogDispatcher;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.fusesource.jansi.AnsiConsole;
+import ua.lokha.spigotloggerforbungee.injectclasses.InjectConsoleReader;
+import ua.lokha.spigotloggerforbungee.paperspigotclasses.ForwardLogHandler;
+import ua.lokha.spigotloggerforbungee.paperspigotclasses.TerminalHandler;
+import ua.lokha.spigotloggerforbungee.utils.MyObject;
+import ua.lokha.spigotloggerforbungee.utils.Try;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.io.IoBuilder;
-import ua.lokha.spigotloggerforbungee.paperspigotclasses.ForwardLogHandler;
-import ua.lokha.spigotloggerforbungee.paperspigotclasses.TerminalHandler;
-import ua.lokha.spigotloggerforbungee.utils.MyObject;
-import ua.lokha.spigotloggerforbungee.utils.Try;
 
 /**
  * many fragments of this class are taken from net.minecraft.server.v1_12_R1.DedicatedServer::init
@@ -48,7 +44,7 @@ public class SpigotLoggerForBungeePlugin extends Plugin {
         System.setErr(AnsiConsole.system_err);
 
         //init logger from log4j2.xml from resources this plugin
-        this.logger = LogManager.getLogger();
+        this.logger = LogManager.getLogger(SpigotLoggerForBungeePlugin.class);
 
         //set default I/O
         org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
